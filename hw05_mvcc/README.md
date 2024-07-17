@@ -173,6 +173,8 @@ table_name |dead_tuples|
 random_text|          0|
 ```
 
+Автовакуум успел стриггериться до того как я выполнил запрос, поэтому к-во мертвых строк == 0
+
 ```
 -- Дата последнего автовакуума
 SELECT relname AS table_name, last_autovacuum
@@ -203,6 +205,16 @@ select pg_total_relation_size('random_text');
 pg_total_relation_size|
 ----------------------+
            821 673 984|
+```
+```
+-- Количество мертвых строк в таблице
+SELECT relname AS table_name, n_dead_tup AS dead_tuples
+FROM pg_stat_all_tables
+WHERE relname = 'random_text';
+
+table_name |dead_tuples|
+-----------+-----------+
+random_text| 10 000 000|
 ```
 
 #### Объясните полученный результат
